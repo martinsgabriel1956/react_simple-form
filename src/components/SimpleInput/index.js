@@ -1,9 +1,6 @@
-import { useState } from "react";
-
-import { useInput } from '../../hooks/useInput';
-
 import { toast, Toaster } from "react-hot-toast";
 
+import { useInput } from '../../hooks/useInput';
 import { Button } from "../UI/Button";
 
 export function SimpleInput() {
@@ -17,30 +14,24 @@ export function SimpleInput() {
   } = useInput(
     value => value.trim() !== '',
   );
-
-  const [email, setEmail] = useState("");
-  const [emailTouched, setEmailTouched] = useState(false);
   
-  const emailIsValid = email.trim().includes("@");
-  const emailInputIsValid = !emailIsValid && emailTouched;
+  const { 
+    value: email, 
+    isValid: emailIsValid,
+    hasError: emailInputHasError, 
+    handleValueInputBlur: handleEmailInputBlur, 
+    handleValueInputChange: handleEmailInputChange,
+    reset: resetEmailInput
+  } = useInput(
+    value => value.trim().includes("@"),
+  );
 
   let formIsValid = false;
 
   if(nameIsValid && emailIsValid) formIsValid = true;
-  
-  
-  function handleEmailInputChange (e) {
-    setEmail(e.target.value);
-  }
-
-  function handleEmailInputBlur (e) {
-    setEmailTouched(true);
-  }
 
   function handleFormSubmission(e) {
     e.preventDefault();
-
-    setEmailTouched(true);
 
     if (!nameIsValid && !emailIsValid) {
       toast.error("Preencha todos os campos!");
@@ -50,8 +41,7 @@ export function SimpleInput() {
     toast.success('Formulário preenchido com sucesso!')
 
     resetNameInput();
-    setEmail("");
-    setEmailTouched(false);
+    resetEmailInput();
   }
 
   return (
@@ -69,7 +59,7 @@ export function SimpleInput() {
           />
         </div>
         {nameInputHasError &&  <Toaster />}
-        <div className={`${emailInputIsValid ? 'form-control invalid' : 'form-control'}`}>
+        <div className={`${emailInputHasError ? 'form-control invalid' : 'form-control'}`}>
           <label htmlFor="name">Your Email</label>
           <input
             type="email"
@@ -79,7 +69,7 @@ export function SimpleInput() {
             value={email}
           />
         </div>
-        {emailInputIsValid &&  <Toaster />}
+        {emailInputHasError &&  <Toaster />}
         <div className="form-actions">
           <Button disabled={!formIsValid}>Submit</Button>
         </div>
