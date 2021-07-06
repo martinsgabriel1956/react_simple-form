@@ -18,6 +18,16 @@ export function SimpleInput() {
     setName(e.target.value);
   }
 
+  function handleNameInputBlur(e) {
+    setNameTouched(true);
+    
+    if (name.trim() === "") {
+      toast.error("Preencha todos os campos!");
+      setNameIsValid(false);
+      return;
+    }
+  }
+
   function handleFormSubmission(e) {
     e.preventDefault();
 
@@ -50,6 +60,7 @@ export function SimpleInput() {
             type="text"
             id="name"
             onChange={handleNameInputChange}
+            blur={handleNameInputBlur}
             value={name}
           />
         </div>
