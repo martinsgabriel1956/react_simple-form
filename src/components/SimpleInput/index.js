@@ -7,6 +7,7 @@ import { Button } from "../UI/Button";
 export function SimpleInput() {
   const inputNameRef = useRef();
   const [name, setName] = useState("");
+  const [nameIsValid, setNameIsValid] = useState(true);
 
   function handleNameInputChange(e) {
     setName(e.target.value);
@@ -17,8 +18,11 @@ export function SimpleInput() {
     
     if (name.trim() === "") {
       toast.error("Preencha todos os campos!");
+      setNameIsValid(false);
       return;
     }
+
+    setNameIsValid(true);
 
     const value = inputNameRef.current.value;
     console.log(value);
@@ -28,9 +32,8 @@ export function SimpleInput() {
 
   return (
     <>
-      <Toaster />
       <form onSubmit={handleFormSubmission}>
-        <div className="form-control">
+        <div className={`${nameIsValid ? 'form-control' : 'form-control invalid'}`}>
           <label htmlFor="name">Your Name</label>
           <input
             ref={inputNameRef}
@@ -40,6 +43,7 @@ export function SimpleInput() {
             value={name}
           />
         </div>
+        {!nameIsValid && <Toaster />}
         <div className="form-actions">
           <Button>Submit</Button>
         </div>
