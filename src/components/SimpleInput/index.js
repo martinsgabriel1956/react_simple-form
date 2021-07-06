@@ -10,6 +10,10 @@ export function SimpleInput() {
   
   const nameIsValid = name.trim() !== '';
   const nameInputIsValid = !nameIsValid && nameTouched;
+
+  let formIsValid = false;
+
+  if(nameIsValid) formIsValid = true;
   
   function handleNameInputChange(e) {
     setName(e.target.value);
@@ -52,7 +56,7 @@ export function SimpleInput() {
         </div>
         {nameInputIsValid &&  <Toaster />}
         <div className="form-actions">
-          <Button>Submit</Button>
+          <Button disabled={!formIsValid}>Submit</Button>
         </div>
       </form>
     </>

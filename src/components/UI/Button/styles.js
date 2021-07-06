@@ -14,4 +14,13 @@ export const Container = styled.button`
     background-color: #33059e;
     border-color: #33059e;
   }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:active {
+    background-color: #ccc;
+    color: #292929;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
 `;

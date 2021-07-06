@@ -2,7 +2,7 @@ import { Container } from './styles';
 
 export function Button({children, ...props}) {
   return (
-    <Container>
+    <Container {...props}>
       {children}
     </Container>
   );
