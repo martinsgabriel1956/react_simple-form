@@ -6,14 +6,19 @@ import { Button } from "../UI/Button";
 
 export function SimpleInput() {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [nameTouched, setNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
   
   const nameIsValid = name.trim() !== '';
   const nameInputIsValid = !nameIsValid && nameTouched;
+  
+  const emailIsValid = email.trim().includes("@");
+  const emailInputIsValid = !emailIsValid && emailTouched;
 
   let formIsValid = false;
 
-  if(nameIsValid) formIsValid = true;
+  if(nameIsValid && emailIsValid) formIsValid = true;
   
   function handleNameInputChange(e) {
     setName(e.target.value);
@@ -23,12 +28,21 @@ export function SimpleInput() {
     setNameTouched(true);
   }
 
+  function handleEmailInputChange (e) {
+    setEmail(e.target.value);
+  }
+
+  function handleEmailInputBlur (e) {
+    setEmailTouched(true);
+  }
+
   function handleFormSubmission(e) {
     e.preventDefault();
 
     setNameTouched(true);
+    setEmailTouched(true);
 
-    if (!nameIsValid) {
+    if (!nameIsValid && !emailIsValid) {
       toast.error("Preencha todos os campos!");
       return;
     }
@@ -37,8 +51,9 @@ export function SimpleInput() {
 
     setName("");
     setNameTouched(false);
+    setEmail("");
+    setEmailTouched(false);
   }
-
 
   return (
     <>
@@ -55,6 +70,17 @@ export function SimpleInput() {
           />
         </div>
         {nameInputIsValid &&  <Toaster />}
+        <div className={`${emailInputIsValid ? 'form-control invalid' : 'form-control'}`}>
+          <label htmlFor="name">Your Email</label>
+          <input
+            type="email"
+            id="email"
+            onChange={handleEmailInputChange}
+            blur={handleEmailInputBlur}
+            value={email}
+          />
+        </div>
+        {emailInputIsValid &&  <Toaster />}
         <div className="form-actions">
           <Button disabled={!formIsValid}>Submit</Button>
         </div>
