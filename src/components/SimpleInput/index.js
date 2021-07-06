@@ -1,17 +1,25 @@
 import { useState } from "react";
 
+import { useInput } from '../../hooks/useInput';
+
 import { toast, Toaster } from "react-hot-toast";
 
 import { Button } from "../UI/Button";
 
 export function SimpleInput() {
-  const [name, setName] = useState("");
+  const { 
+    value: name, 
+    isValid: nameIsValid,
+    hasError: nameInputHasError, 
+    handleValueInputBlur: handleNameInputBlur, 
+    handleValueInputChange: handleNameInputChange,
+    reset: resetNameInput
+  } = useInput(
+    value => value.trim() !== '',
+  );
+
   const [email, setEmail] = useState("");
-  const [nameTouched, setNameTouched] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
-  
-  const nameIsValid = name.trim() !== '';
-  const nameInputIsValid = !nameIsValid && nameTouched;
   
   const emailIsValid = email.trim().includes("@");
   const emailInputIsValid = !emailIsValid && emailTouched;
@@ -20,14 +28,7 @@ export function SimpleInput() {
 
   if(nameIsValid && emailIsValid) formIsValid = true;
   
-  function handleNameInputChange(e) {
-    setName(e.target.value);
-  }
-
-  function handleNameInputBlur(e) {
-    setNameTouched(true);
-  }
-
+  
   function handleEmailInputChange (e) {
     setEmail(e.target.value);
   }
@@ -39,7 +40,6 @@ export function SimpleInput() {
   function handleFormSubmission(e) {
     e.preventDefault();
 
-    setNameTouched(true);
     setEmailTouched(true);
 
     if (!nameIsValid && !emailIsValid) {
@@ -49,8 +49,7 @@ export function SimpleInput() {
 
     toast.success('Formulário preenchido com sucesso!')
 
-    setName("");
-    setNameTouched(false);
+    resetNameInput();
     setEmail("");
     setEmailTouched(false);
   }
@@ -59,7 +58,7 @@ export function SimpleInput() {
     <>
       <Toaster /> 
       <form onSubmit={handleFormSubmission}>
-        <div className={`${nameInputIsValid ? 'form-control invalid' : 'form-control'}`}>
+        <div className={`${nameInputHasError ? 'form-control invalid' : 'form-control'}`}>
           <label htmlFor="name">Your Name</label>
           <input
             type="text"
@@ -69,7 +68,7 @@ export function SimpleInput() {
             value={name}
           />
         </div>
-        {nameInputIsValid &&  <Toaster />}
+        {nameInputHasError &&  <Toaster />}
         <div className={`${emailInputIsValid ? 'form-control invalid' : 'form-control'}`}>
           <label htmlFor="name">Your Email</label>
           <input
