@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { toast, Toaster } from "react-hot-toast";
 
@@ -7,7 +7,12 @@ import { Button } from "../UI/Button";
 export function SimpleInput() {
   const inputNameRef = useRef();
   const [name, setName] = useState("");
-  const [nameIsValid, setNameIsValid] = useState(true);
+  const [nameIsValid, setNameIsValid] = useState(false);
+  const [nameTouched, setNameTouched] = useState(false);
+
+  useEffect(() => {
+    if(nameIsValid) toast.success('Formulário preenchido com sucesso!')
+  }, [nameIsValid]);
 
   function handleNameInputChange(e) {
     setName(e.target.value);
@@ -15,7 +20,9 @@ export function SimpleInput() {
 
   function handleFormSubmission(e) {
     e.preventDefault();
-    
+
+    setNameTouched(true);
+
     if (name.trim() === "") {
       toast.error("Preencha todos os campos!");
       setNameIsValid(false);
@@ -30,10 +37,13 @@ export function SimpleInput() {
     setName("");
   }
 
+  const nameInputIsValid = !nameIsValid && nameTouched;
+
   return (
     <>
+      <Toaster /> 
       <form onSubmit={handleFormSubmission}>
-        <div className={`${nameIsValid ? 'form-control' : 'form-control invalid'}`}>
+        <div className={`${nameInputIsValid ? 'form-control invalid' : 'form-control'}`}>
           <label htmlFor="name">Your Name</label>
           <input
             ref={inputNameRef}
@@ -43,7 +53,7 @@ export function SimpleInput() {
             value={name}
           />
         </div>
-        {!nameIsValid && <Toaster />}
+        {nameInputIsValid &&  <Toaster />}
         <div className="form-actions">
           <Button>Submit</Button>
         </div>
