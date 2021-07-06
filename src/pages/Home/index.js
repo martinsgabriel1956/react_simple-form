@@ -1,5 +1,11 @@
+import { Container } from './styles';
+
+import { SimpleInput } from '../../components/SimpleInput';
+
 export function Home() {
   return (
-    <h1>Home</h1>
+    <Container>
+      <SimpleInput />
+    </Container>
   );
 }
