@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ControlGroup = styled.div`
+export const ControlGroup = styled.form`
   display: flex;
   column-gap: 1rem;
   flex-wrap: wrap;
